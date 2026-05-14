@@ -2,6 +2,7 @@ package neet
 
 import (
 	gorrm "RatWAF/database"
+	"RatWAF/regex"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,19 +11,14 @@ import (
 
 func ReverseProxy() {
 	addr := "127.0.0.1:8080"
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		//这里打印详细信息
 		reqDump, err := httputil.DumpRequest(r, true)
 		reqStr := string(reqDump)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-
 		remote := fmt.Sprintf("http://127.0.0.1:20023%s", r.URL.String())
-
-		// method 请求方法 remote 拼接的url
 		req, err := http.NewRequest(r.Method, remote, r.Body)
 		if err != nil {
 			fmt.Println(err)
@@ -35,9 +31,19 @@ func ReverseProxy() {
 			return
 		}
 		io.Copy(w, res.Body)
-		fmt.Println("Attack ip", r.RemoteAddr)
-		fmt.Println("reqstr ", reqStr)
-		gorrm.InsertWafLog(r.RemoteAddr, reqStr, remote)
+		str := r.RemoteAddr + reqStr + remote
+		sql_ok, attackTypeSQL := regex.SQL_Injection(str)
+		rce_ok, attackTypeRce := regex.RCE(str)
+		if sql_ok {
+			fmt.Println("TRUE", str)
+			fmt.Println("type", attackTypeSQL)
+			gorrm.InsertWafLog(r.RemoteAddr, reqStr, remote, attackTypeSQL)
+		}
+		if rce_ok {
+			fmt.Println("TRUE", str)
+			fmt.Println("type", attackTypeRce)
+			gorrm.InsertWafLog(r.RemoteAddr, reqStr, remote, attackTypeRce)
+		}
 	})
 
 	fmt.Println("gateway runserver", addr)

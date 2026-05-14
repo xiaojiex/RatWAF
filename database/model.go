@@ -11,14 +11,16 @@ type WafLog struct {
 	Request    string    `gorm:"type:mediumtext;not null"`
 	Createtime time.Time `gorm:"type:datetime;autoCreateTime"`
 	FullUrl    string    `gorm:"column:full_url;type:text"`
+	AttackType string    `gorm:"column:attack_type;size:60;not null"`
 }
 
-func InsertWafLog(AttackerIp, Request, FullUrl string) {
+func InsertWafLog(AttackerIp, Request, FullUrl, AttackType string) {
 
 	log := WafLog{
 		AttackerIP: AttackerIp,
 		Request:    Request,
 		FullUrl:    FullUrl,
+		AttackType: AttackType,
 	}
 
 	err := DB.Table("waf_log").Create(&log).Error

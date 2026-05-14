@@ -85,14 +85,19 @@
     <div class="card">
         <h2>攻击日志详情 #{{.log.ID}}</h2>
 
-        <div class="item">
-            <span class="label">攻击者IP：</span>
-            <span class="value ip">{{.log.AttackerIP}}</span>
-        </div>
+        <!-- ???????? -->
+        <!-- <div class="item">
+            <span class="label">攻击类型：</span>
+            <span class="value ip">{{.log.AttackType}}</span>
+        </div> -->
+
 
         <div class="item">
+            <div class="line">攻击类型：<span class="ip">{{.log.AttackType}}</span></div>
+        </div>
+        <div class="item">
             <span class="label">攻击路径：</span>
-            <span class="value url">{{.log.FullUrl}}</span>
+            <span class="value url" style="word-break: break-all; white-space: normal;">{{.log.FullUrl}}</span>
         </div>
 
         <div class="item">

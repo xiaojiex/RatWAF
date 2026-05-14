@@ -164,8 +164,10 @@
 
             {{ range .log }}
             <div class="log-card" onclick="window.location='/detail/{{.ID}}'">
+                <div class="line">攻击类型：<span class="ip">{{.AttackType}}</span></div>
                 <div class="line">攻击者IP：<span class="ip">{{.AttackerIP}}</span></div>
-                <div class="line">攻击路径：<span class="url">{{.FullUrl}}</span></div>
+                <div class="line">攻击路径：<span class="url"
+                        style="word-break: break-all; white-space: normal; line-height: 1.4;">{{.FullUrl}}</span></div>
                 <div class="line time">记录时间：{{.Createtime}}</div>
             </div>
             {{ end }}
