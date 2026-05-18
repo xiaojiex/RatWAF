@@ -32,6 +32,7 @@ func ReverseProxy() {
 		}
 		io.Copy(w, res.Body)
 		str := r.RemoteAddr + reqStr + remote
+		
 		sql_ok, attackTypeSQL := regex.SQL_Injection(str)
 		rce_ok, attackTypeRce := regex.RCE(str)
 		if sql_ok {
